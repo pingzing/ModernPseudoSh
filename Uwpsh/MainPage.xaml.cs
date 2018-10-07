@@ -47,7 +47,7 @@ namespace Uwpsh
                         () =>
                         {
                             // ...and then you'd do something to render it.
-                            // For now, just emit unparsed VT100 to the primary TextBlock.
+                            // For now, just emit raw VT100 to the primary TextBlock.
                             TerminalHistoryBlock.Text += new string(buf.Take(bytesRead).ToArray());
                         });
                 }
