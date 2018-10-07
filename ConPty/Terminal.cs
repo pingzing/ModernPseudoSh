@@ -1,23 +1,18 @@
-﻿using Microsoft.Win32.SafeHandles;
+﻿using ConPty.Processes;
+using Microsoft.Win32.SafeHandles;
 using System;
 using System.ComponentModel;
 using System.IO;
-using System.IO.Pipes;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using Wpfsh;
-using static Wpfsh.Native.ConsoleApi;
+using static ConPty.Native.ConsoleApi;
 
-namespace MiniTerm
+namespace ConPty
 {
     /// <summary>
-    /// The UI of the terminal. It's just a normal console window, but we're managing the input/output.
-    /// In a "real" project this could be some other UI.
+    /// Class for managing communication with the underlying console, and communicating with its pseudoconsole.
     /// </summary>
-    internal sealed class Terminal
+    public sealed class Terminal
     {
         private const string ExitCommand = "exit\r";
         private const string CtrlC_Command = "\x3";
@@ -27,15 +22,12 @@ namespace MiniTerm
 
         public FileStream ConsoleOutStream { get; private set; }
 
+        /// <summary>
+        /// Fired once the console has been hooked up and is ready to receive input.
+        /// </summary>
         public event EventHandler OutputReady;
 
         public Terminal()
-        {
-            InitializeConsole();
-            EnableVirtualTerminalSequenceProcessing();
-        }
-
-        private void InitializeConsole()
         {
             if (GetConsoleWindow() == IntPtr.Zero)
             {
@@ -46,32 +38,10 @@ namespace MiniTerm
                     throw new InvalidOperationException($"Could not allocate console for this process. Error message: {errorMessage}");
                 }
             }
-        }
 
-        private SafeFileHandle GetConsoleScreenBuffer()
-        {
-            IntPtr file = CreateFileW(
-                ConsoleOutPseudoFilename,
-                GENERIC_WRITE | GENERIC_READ,
-                FILE_SHARE_WRITE,
-                IntPtr.Zero,
-                OPEN_EXISTING,
-                FILE_ATTRIBUTE_NORMAL,
-                IntPtr.Zero);
-
-            if (file == new IntPtr(-1))
-            {
-                string errorMessage = new Win32Exception(Marshal.GetLastWin32Error()).Message;
-                throw new InvalidOperationException($"Could not get console screen buffer. Error message: {errorMessage}");
-            }
-
-            return new SafeFileHandle(file, true);
-        }
-
-
-        /// <summary>
-        /// Newer versions of the windows console support interpreting virtual terminal sequences, we just have to opt-in
-        /// </summary>
+            EnableVirtualTerminalSequenceProcessing();
+        }        
+        
         private void EnableVirtualTerminalSequenceProcessing()
         {
             SafeFileHandle screenBuffer = GetConsoleScreenBuffer();
@@ -102,11 +72,13 @@ namespace MiniTerm
         /// https://docs.microsoft.com/en-us/windows/console/creating-a-pseudoconsole-session#creating-the-pseudoconsole
         /// </summary>
         /// <param name="command">the command to run, e.g. cmd.exe</param>
-        public void Run(string command)
+        /// <param name="consoleHeight">The height (in characters) to start the pseudoconsole with. Defaults to 80.</param>
+        /// <param name="consoleWidth">The width (in characters) to start the pseudoconsole with. Defaults to 30.</param>
+        public void Start(string command, int consoleWidth = 80, int consoleHeight = 30)
         {
             using (var inputPipe = new PseudoConsolePipe())
             using (var outputPipe = new PseudoConsolePipe())
-            using (var pseudoConsole = PseudoConsole.Create(inputPipe.ReadSide, outputPipe.WriteSide, 80, 30))
+            using (var pseudoConsole = PseudoConsole.Create(inputPipe.ReadSide, outputPipe.WriteSide, consoleWidth, consoleHeight))
             using (var process = ProcessFactory.Start(command, PseudoConsole.PseudoConsoleThreadAttribute, pseudoConsole.Handle))
             {
                 // copy all pseudoconsole output to a FileStream and expose it to the rest of the app
@@ -127,21 +99,17 @@ namespace MiniTerm
             }
         }
 
+        /// <summary>
+        /// Sends the given string to the anonymous pipe that writes to the active pseudoconsole.
+        /// </summary>
+        /// <param name="input"></param>
         public void WriteToPseudoConsole(string input)
         {
-            _consoleInputWriter.Write(input);
-        }
-
-        /// <summary>
-        /// Don't let ctrl-c kill the terminal, it should be sent to the process in the terminal.
-        /// </summary>
-        private static void ForwardCtrlC(StreamWriter writer)
-        {
-            Console.CancelKeyPress += (sender, e) =>
+            if (_consoleInputWriter == null)
             {
-                e.Cancel = true;
-                writer.Write(CtrlC_Command);
-            };
+                throw new InvalidOperationException("There is no writer attached to a pseudoconsole. Have you called Start on this instance yet?");
+            }
+            _consoleInputWriter.Write(input);
         }
 
         /// <summary>
@@ -169,12 +137,33 @@ namespace MiniTerm
             }, true);
         }
 
+        // TODO: Should this class just implement IDisposable?
         private void DisposeResources(params IDisposable[] disposables)
         {
             foreach (var disposable in disposables)
             {
                 disposable.Dispose();
             }
+        }
+
+        private SafeFileHandle GetConsoleScreenBuffer()
+        {
+            IntPtr file = CreateFileW(
+                ConsoleOutPseudoFilename,
+                GENERIC_WRITE | GENERIC_READ,
+                FILE_SHARE_WRITE,
+                IntPtr.Zero,
+                OPEN_EXISTING,
+                FILE_ATTRIBUTE_NORMAL,
+                IntPtr.Zero);
+
+            if (file == new IntPtr(-1))
+            {
+                string errorMessage = new Win32Exception(Marshal.GetLastWin32Error()).Message;
+                throw new InvalidOperationException($"Could not get console screen buffer. Error message: {errorMessage}");
+            }
+
+            return new SafeFileHandle(file, true);
         }
     }
 }

@@ -16,7 +16,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <ScrollViewer Grid.Row="0">
+        <ScrollViewer x:Name="TerminalHistoryScrollViewer" Grid.Row="0">
             <TextBlock x:Name="TerminalHistoryBlock" 
                        TextWrapping="Wrap"
                        FontFamily="Consolas"

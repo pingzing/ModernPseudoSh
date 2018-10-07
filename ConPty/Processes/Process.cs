@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using static Wpfsh.Native.ProcessApi;
+using static ConPty.Native.ProcessApi;
 
-namespace MiniTerm
+namespace ConPty.Processes
 {
     /// <summary>
     /// Represents an instance of a process.

@@ -1,10 +1,9 @@
 ﻿using Microsoft.Win32.SafeHandles;
 using System;
 using System.ComponentModel;
-using System.Runtime.InteropServices;
-using static Wpfsh.Native.PseudoConsoleApi;
+using static ConPty.Native.PseudoConsoleApi;
 
-namespace MiniTerm
+namespace ConPty
 {
     /// <summary>
     /// Utility functions around the new Pseudo Console APIs

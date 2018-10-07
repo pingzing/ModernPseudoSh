@@ -1,8 +1,8 @@
 ﻿using Microsoft.Win32.SafeHandles;
 using System;
-using static Wpfsh.Native.PseudoConsoleApi;
+using static ConPty.Native.PseudoConsoleApi;
 
-namespace MiniTerm
+namespace ConPty
 {
     /// <summary>
     /// A pipe used to talk to the pseudoconsole, as described in:

@@ -2,10 +2,10 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Wpfsh.Native
+namespace ConPty.Native
 {
     /// <summary>
-    /// PInvoke signatures for win32 pseudo console api
+    /// PInvoke signatures for Win32's PseudoConsole API.
     /// </summary>
     static class PseudoConsoleApi
     {

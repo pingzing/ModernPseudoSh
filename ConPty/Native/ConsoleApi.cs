@@ -1,12 +1,12 @@
 ﻿using Microsoft.Win32.SafeHandles;
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
-using Windows.UI;
 
-namespace Wpfsh.Native
+namespace ConPty.Native
 {
     /// <summary>
-    /// PInvoke signatures for win32 console api
+    /// PInvoke signatures for Win32's Console API.
     /// </summary>
     static class ConsoleApi
     {
@@ -24,9 +24,6 @@ namespace Wpfsh.Native
         
         internal const uint ATTACH_PARRENT = 0xFFFFFFFF;
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        internal static extern SafeFileHandle GetStdHandle(int nStdHandle);
-
         [DllImport("kernel32.dll", EntryPoint = "AllocConsole", SetLastError = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         internal static extern bool AllocConsole();
 
@@ -35,10 +32,7 @@ namespace Wpfsh.Native
 
         [DllImport("kernel32.dll", SetLastError = true)]
         internal static extern bool SetConsoleMode(SafeFileHandle hConsoleHandle, uint mode);
-
-        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        internal static extern bool SetStdHandle(int nStdHandleId, IntPtr stdOutHandle);        
-
+        
         [DllImport("kernel32.dll", SetLastError = true)]
         internal static extern bool GetConsoleMode(SafeFileHandle handle, out uint mode);
 

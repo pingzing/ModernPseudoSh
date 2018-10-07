@@ -70,14 +70,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Native\Composition.cs" />
-    <Compile Include="Native\ConsoleApi.cs" />
-    <Compile Include="Native\ProcessApi.cs" />
-    <Compile Include="Native\PseudoConsoleApi.cs" />
-    <Compile Include="MiniTerm\Processes\Process.cs" />
-    <Compile Include="MiniTerm\Processes\ProcessFactory.cs" />
-    <Compile Include="MiniTerm\PseudoConsole.cs" />
-    <Compile Include="MiniTerm\PseudoConsolePipe.cs" />
-    <Compile Include="MiniTerm\Terminal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -102,6 +94,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ConPty\ConPty.csproj">
+      <Project>{96634c74-0c52-4381-9477-97e1d58fe5b5}</Project>
+      <Name>ConPty</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

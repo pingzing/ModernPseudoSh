@@ -19,8 +19,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace Uwpsh
-{
-   
+{   
     sealed partial class App : Application
     {        
         public App()
