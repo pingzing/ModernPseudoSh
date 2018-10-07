@@ -16,7 +16,6 @@ namespace ConPty
     {
         private const string ExitCommand = "exit\r";
         private const string CtrlC_Command = "\x3";
-        private CONSOLE_SCREEN_BUFFER_INFO_EX _consoleScreenInfo;
         private SafeFileHandle _consoleInputPipeWriteHandle;
         private StreamWriter _consoleInputWriter;
 
@@ -29,13 +28,15 @@ namespace ConPty
 
         public Terminal()
         {
+            // By default, UI applications don't have a console associated with them.
+            // So first, we check to see if this process has a console.
             if (GetConsoleWindow() == IntPtr.Zero)
             {
+                // If it doesn't ask Windows to allocate one to it for us.
                 bool createConsoleSuccess = AllocConsole();
                 if (!createConsoleSuccess)
                 {
-                    string errorMessage = new Win32Exception(Marshal.GetLastWin32Error()).Message;
-                    throw new InvalidOperationException($"Could not allocate console for this process. Error message: {errorMessage}");
+                    throw new Win32Exception(Marshal.GetLastWin32Error(), $"Could not allocate console for this process.");
                 }
             }
 
@@ -47,23 +48,13 @@ namespace ConPty
             SafeFileHandle screenBuffer = GetConsoleScreenBuffer();
             if (!GetConsoleMode(screenBuffer, out uint outConsoleMode))
             {
-                string errorMessage = new Win32Exception(Marshal.GetLastWin32Error()).Message;
-                throw new InvalidOperationException($"Could not get console mode. Error message: {errorMessage}");
+                throw new Win32Exception(Marshal.GetLastWin32Error(), $"Could not get console mode.");
             }
-
             outConsoleMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING | DISABLE_NEWLINE_AUTO_RETURN;
+
             if (!SetConsoleMode(screenBuffer, outConsoleMode))
             {
-                string errorMessage = new Win32Exception(Marshal.GetLastWin32Error()).Message;
-                throw new InvalidOperationException($"Could not enable virtual terminal processing: {errorMessage}");
-            }
-
-            _consoleScreenInfo = new CONSOLE_SCREEN_BUFFER_INFO_EX();
-            _consoleScreenInfo.cbSize = (uint)Marshal.SizeOf(_consoleScreenInfo);
-            if (!GetConsoleScreenBufferInfoEx(screenBuffer, ref _consoleScreenInfo))
-            {
-                string errorMessage = new Win32Exception(Marshal.GetLastWin32Error()).Message;
-                throw new InvalidOperationException($"Could not enable console screen info: {errorMessage}");
+                throw new Win32Exception(Marshal.GetLastWin32Error(), $"Could not enable virtual terminal processing.");
             }
         }
 
@@ -136,8 +127,7 @@ namespace ConPty
                 return false;
             }, true);
         }
-
-        // TODO: Should this class just implement IDisposable?
+        
         private void DisposeResources(params IDisposable[] disposables)
         {
             foreach (var disposable in disposables)

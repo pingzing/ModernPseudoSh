@@ -1,6 +1,5 @@
 ﻿using Microsoft.Win32.SafeHandles;
 using System;
-using System.Drawing;
 using System.Runtime.InteropServices;
 
 namespace ConPty.Native
@@ -48,80 +47,6 @@ namespace ConPty.Native
 
         [DllImport("kernel32.dll", SetLastError = true)]
         internal static extern bool SetConsoleCtrlHandler(ConsoleEventDelegate callback, bool add);
-
-        [DllImport("kernel32.dll", EntryPoint = "GetConsoleScreenBufferInfo", SetLastError = true)]
-        internal static extern bool GetConsoleScreenBufferInfoEx(SafeFileHandle screenBufferHandle, ref CONSOLE_SCREEN_BUFFER_INFO_EX lpConsoleScreenBufferInfo);
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct CONSOLE_SCREEN_BUFFER_INFO_EX
-        {
-            public uint cbSize;
-            public COORD dwSize;
-            public COORD dwCursorPosition;
-            public short wAttributes;
-            public SMALL_RECT srWindow;
-            public COORD dwMaximumWindowSize;
-            public ushort wPopupAttributes;
-            public bool bFullscreenSupported;
-            public COLORREF black;
-            public COLORREF darkBlue;
-            public COLORREF darkGreen;
-            public COLORREF darkCyan;
-            public COLORREF darkRed;
-            public COLORREF darkMagenta;
-            public COLORREF darkYellow;
-            public COLORREF gray;
-            public COLORREF darkGray;
-            public COLORREF blue;
-            public COLORREF green;
-            public COLORREF cyan;
-            public COLORREF red;
-            public COLORREF magenta;
-            public COLORREF yellow;
-            public COLORREF white;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct COORD
-        {
-            public short X;
-            public short Y;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct SMALL_RECT
-        {
-            short Left;
-            short Top;
-            short Right;
-            short Bottom;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]        
-        public struct COLORREF
-        {
-            public uint ColorDWORD;
-
-            public COLORREF(Color color)
-            {
-                ColorDWORD = color.R + (((uint)color.G) << 8) + (((uint)color.B) << 16);
-            }
-
-            public COLORREF(uint r, uint g, uint b)
-            {
-                ColorDWORD = r + (g << 8) + (b << 16);
-            }
-
-            public Color GetColor()
-            {
-                return Color.FromArgb(
-                    0,
-                    (byte)(0x000000FFU & ColorDWORD),
-                    (byte)((0x0000FF00U & ColorDWORD) >> 8),
-                    (byte)((0x00FF0000U & ColorDWORD) >> 16));
-            }
-        }
-
         internal delegate bool ConsoleEventDelegate(CtrlTypes ctrlType);
 
         internal enum CtrlTypes : uint

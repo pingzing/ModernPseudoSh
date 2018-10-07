@@ -22,8 +22,10 @@ namespace Wpfsh
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            // Set acrylic blur on the main Window, for fun.
             Composition.SetAcrylicBlur(this, new Color { A = 128, B = 200, G = 100, R = 0 });
 
+            // Start up the console.
             _terminal = new Terminal();
             Task.Run(() => _terminal.Start("pwsh.exe"));
             _terminal.OutputReady += Terminal_OutputReady;
@@ -46,6 +48,7 @@ namespace Wpfsh
                     Dispatcher.Invoke(() =>
                     {
                         // ...and then you'd do something to render it.
+                        // For now, just emit raw VT100 to the primary TextBlock.
                         TerminalHistoryBlock.Text += new string(buf.Take(bytesRead).ToArray());
                     });
                 }
