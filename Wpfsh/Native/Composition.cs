@@ -40,6 +40,9 @@ namespace Wpfsh.Native
         // ...
     }
 
+    /// <summary>
+    /// Helper class that allows setting acrylic blur on a standard Window.
+    /// </summary>
     internal static class Composition
     {
         [DllImport("user32.dll")]
@@ -48,7 +51,7 @@ namespace Wpfsh.Native
         /// <summary>
         /// Enables Acrylic Blur for the given Window. Requires Windows RS4 or higher.
         /// </summary>
-        /// <param name="window"></param>        
+        /// <param name="window">The window that will have its acrylic blur set.</param>        
         /// <param name="backgroundColor">The color to tint the background. Alpha will be used to determine window background opacity.</param>
         internal static void SetAcrylicBlur(this Window window, Color backgroundColor)
         {

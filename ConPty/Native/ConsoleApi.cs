@@ -2,26 +2,21 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace ConPty.Native
+namespace GUIConsole.ConPTY.Native
 {
     /// <summary>
     /// PInvoke signatures for Win32's Console API.
     /// </summary>
     static class ConsoleApi
     {
-        internal const int STD_OUTPUT_HANDLE = -11;
         internal const uint ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004;
         internal const uint DISABLE_NEWLINE_AUTO_RETURN = 0x0008;
         internal const uint GENERIC_WRITE = 0x40000000;
-        internal const uint GENERIC_READ = 0x80000000;
-        internal const uint FILE_SHARE_READ = 0x00000001;
+        internal const uint GENERIC_READ = 0x80000000;        
         internal const uint FILE_SHARE_WRITE = 0x00000002;
         internal const uint OPEN_EXISTING = 0x00000003;
-        internal const uint FILE_ATTRIBUTE_NORMAL = 0x80;
-        internal const uint ERROR_ACCESS_DENIED = 5;
+        internal const uint FILE_ATTRIBUTE_NORMAL = 0x80;        
         internal const string ConsoleOutPseudoFilename = "CONOUT$";
-        
-        internal const uint ATTACH_PARRENT = 0xFFFFFFFF;
 
         [DllImport("kernel32.dll", EntryPoint = "AllocConsole", SetLastError = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         internal static extern bool AllocConsole();

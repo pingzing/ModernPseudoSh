@@ -1,12 +1,12 @@
 ﻿using Microsoft.Win32.SafeHandles;
 using System;
 using System.ComponentModel;
-using static ConPty.Native.PseudoConsoleApi;
+using static GUIConsole.ConPTY.Native.PseudoConsoleApi;
 
-namespace ConPty
+namespace GUIConsole.ConPTY
 {
     /// <summary>
-    /// Utility functions around the new Pseudo Console APIs
+    /// Utility functions around the new Pseudo Console APIs.
     /// </summary>
     internal sealed class PseudoConsole : IDisposable
     {
@@ -26,9 +26,8 @@ namespace ConPty
                 inputReadSide, outputWriteSide,
                 0, out IntPtr hPC);
             if(createResult != 0)
-            {
-                string errorMessage = new Win32Exception(createResult).Message;                
-                throw new InvalidOperationException("Could not create psuedo console. Error message: " + errorMessage);
+            {                             
+                throw new Win32Exception(createResult, "Could not create psuedo console.");
             }
             return new PseudoConsole(hPC);
         }

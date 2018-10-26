@@ -1,8 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
-using static ConPty.Native.ProcessApi;
+using static GUIConsole.ConPTY.Native.ProcessApi;
 
-namespace ConPty.Processes
+namespace GUIConsole.ConPTY.Processes
 {
     /// <summary>
     /// Support for starting and configuring processes.
@@ -35,7 +36,7 @@ namespace ConPty.Processes
             );
             if (success || lpSize == IntPtr.Zero) // we're not expecting `success` here, we just want to get the calculated lpSize
             {
-                throw new InvalidOperationException("Could not calculate the number of bytes for the attribute list. " + Marshal.GetLastWin32Error());
+                throw new Win32Exception(Marshal.GetLastWin32Error(), "Could not calculate the number of bytes for the attribute list.");
             }
 
             var startupInfo = new STARTUPINFOEX();
@@ -50,7 +51,7 @@ namespace ConPty.Processes
             );
             if (!success)
             {
-                throw new InvalidOperationException("Could not set up attribute list. " + Marshal.GetLastWin32Error());
+                throw new Win32Exception(Marshal.GetLastWin32Error(), "Could not set up attribute list.");
             }
 
             success = UpdateProcThreadAttribute(
@@ -64,7 +65,7 @@ namespace ConPty.Processes
             );
             if (!success)
             {
-                throw new InvalidOperationException("Could not set pseudoconsole thread attribute. " + Marshal.GetLastWin32Error());
+                throw new Win32Exception(Marshal.GetLastWin32Error(), "Could not set pseudoconsole thread attribute.");
             }
 
             return startupInfo;
@@ -89,7 +90,7 @@ namespace ConPty.Processes
             );
             if (!success)
             {
-                throw new InvalidOperationException("Could not create process. " + Marshal.GetLastWin32Error());
+                throw new Win32Exception(Marshal.GetLastWin32Error(), "Could not create process.");
             }
 
             return pInfo;

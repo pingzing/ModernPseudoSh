@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace ConPty.Native
+namespace GUIConsole.ConPTY.Native
 {
     /// <summary>
     /// PInvoke signatures for Win32's Process API.

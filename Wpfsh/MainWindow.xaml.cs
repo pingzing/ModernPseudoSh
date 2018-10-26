@@ -1,4 +1,4 @@
-﻿using ConPty;
+﻿using GUIConsole.ConPTY;
 using System;
 using System.IO;
 using System.Linq;
@@ -27,13 +27,14 @@ namespace Wpfsh
 
             // Start up the console.
             _terminal = new Terminal();
-            Task.Run(() => _terminal.Start("pwsh.exe"));
+            Task.Run(() => _terminal.Start("cmd.exe"));
             _terminal.OutputReady += Terminal_OutputReady;
         }
 
         private void Terminal_OutputReady(object sender, EventArgs e)
         {
-            Task.Run(() => CopyConsoleToWindow());
+            // Use a long-running task to kick off the "read console" task, so that we don't use a standard thread pool thread.
+            Task.Factory.StartNew(() => CopyConsoleToWindow(), TaskCreationOptions.LongRunning);
         }
 
         private void CopyConsoleToWindow()
@@ -42,7 +43,7 @@ namespace Wpfsh
             {
                 int bytesRead;
                 char[] buf = new char[8];
-                while ((bytesRead = reader.ReadBlock(buf, 0, 2)) != 0)
+                while ((bytesRead = reader.ReadBlock(buf, 0, 8)) != 0)
                 {
                     // This is where you'd parse and tokenize the incoming VT100 text, most likely.
                     Dispatcher.Invoke(() =>
@@ -55,24 +56,14 @@ namespace Wpfsh
             }
         }
 
-        private void TerminalEntryField_KeyDown(object sender, KeyEventArgs e)
+        private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if (!e.Handled)
             {
                 // This is where you'd take the pressed key, and convert it to a 
-                // VT100 code before sending it along. For now, just send something.
+                // VT100 code before sending it along. For now, we'll just send _something_.
                 _terminal.WriteToPseudoConsole(e.Key.ToString());
             }
-        }
-
-        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Left) { DragMove(); }
-        }
-
-        private void CloseButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
         }
 
         private bool _autoScroll = true;
@@ -98,6 +89,35 @@ namespace Wpfsh
                     TerminalHistoryViewer.ScrollToEnd();
                 }
             }
+        }
+
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left) { DragMove(); }
+        }
+
+        private void MaximizeRestoreButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (WindowState == WindowState.Normal)
+            {
+                WindowState = WindowState.Maximized;
+                MaximizeRestoreButton.Content = "\uE923";
+            }
+            else if (WindowState == WindowState.Maximized)
+            {
+                WindowState = WindowState.Normal;
+                MaximizeRestoreButton.Content = "\uE922";
+            }
+        }
+
+        private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

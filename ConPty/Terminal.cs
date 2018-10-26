@@ -1,13 +1,13 @@
-﻿using ConPty.Processes;
+﻿using GUIConsole.ConPTY.Processes;
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
-using static ConPty.Native.ConsoleApi;
+using static GUIConsole.ConPTY.Native.ConsoleApi;
 
-namespace ConPty
+namespace GUIConsole.ConPTY
 {
     /// <summary>
     /// Class for managing communication with the underlying console, and communicating with its pseudoconsole.
@@ -19,6 +19,9 @@ namespace ConPty
         private SafeFileHandle _consoleInputPipeWriteHandle;
         private StreamWriter _consoleInputWriter;
 
+        /// <summary>
+        /// A stream of VT-100-enabled output from the console.
+        /// </summary>
         public FileStream ConsoleOutStream { get; private set; }
 
         /// <summary>
@@ -40,6 +43,7 @@ namespace ConPty
                 }
             }
 
+            // And enable VT processing for our process's console.
             EnableVirtualTerminalSequenceProcessing();
         }        
         
@@ -93,7 +97,7 @@ namespace ConPty
         /// <summary>
         /// Sends the given string to the anonymous pipe that writes to the active pseudoconsole.
         /// </summary>
-        /// <param name="input"></param>
+        /// <param name="input">A string of characters to write to the console. Supports VT-100 codes.</param>
         public void WriteToPseudoConsole(string input)
         {
             if (_consoleInputWriter == null)
@@ -136,6 +140,12 @@ namespace ConPty
             }
         }
 
+        /// <summary>
+        /// A helper method that opens a handle on the console's screen buffer, which will allow us to get its output,
+        /// even if STDOUT has been redirected (which Visual Studio does by default).
+        /// </summary>
+        /// <returns>A file handle to the console's screen buffer.</returns>
+        /// <remarks>This is described in more detail here: https://docs.microsoft.com/en-us/windows/console/console-handles </remarks>
         private SafeFileHandle GetConsoleScreenBuffer()
         {
             IntPtr file = CreateFileW(
@@ -148,9 +158,8 @@ namespace ConPty
                 IntPtr.Zero);
 
             if (file == new IntPtr(-1))
-            {
-                string errorMessage = new Win32Exception(Marshal.GetLastWin32Error()).Message;
-                throw new InvalidOperationException($"Could not get console screen buffer. Error message: {errorMessage}");
+            {                
+                throw new Win32Exception(Marshal.GetLastWin32Error(), "Could not get console screen buffer.");
             }
 
             return new SafeFileHandle(file, true);

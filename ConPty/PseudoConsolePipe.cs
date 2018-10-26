@@ -1,8 +1,10 @@
 ﻿using Microsoft.Win32.SafeHandles;
 using System;
-using static ConPty.Native.PseudoConsoleApi;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
+using static GUIConsole.ConPTY.Native.PseudoConsoleApi;
 
-namespace ConPty
+namespace GUIConsole.ConPTY
 {
     /// <summary>
     /// A pipe used to talk to the pseudoconsole, as described in:
@@ -20,7 +22,7 @@ namespace ConPty
         {
             if (!CreatePipe(out ReadSide, out WriteSide, IntPtr.Zero, 0))
             {
-                throw new InvalidOperationException("failed to create pipe");
+                throw new Win32Exception(Marshal.GetLastWin32Error(), "failed to create pipe");
             }
         }
 

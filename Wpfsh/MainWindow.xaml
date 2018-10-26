@@ -14,24 +14,63 @@
         BorderThickness="1"
         BorderBrush="LightSlateGray"
         
+        KeyDown="Window_KeyDown"
         Loaded="Window_Loaded">
+    <Window.Resources>
+        <Style x:Key="TitleBarButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Width" Value="46"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <Style x:Key="CloseButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource TitleBarButtonStyle}">
+            <Setter Property="Content" Value="&#xE10A;"/>
+            <!--Remove the default Button template's Triggers, otherwise they'll override our trigger below.-->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Button.Background" Value="Red"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel x:Name="TitleBarButtons" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top">
-            <Button x:Name="CloseButton" Background="Red" Foreground="White" Content="X" Click="CloseButton_Click"/>
+        <StackPanel x:Name="TitleBarButtons" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+            <Button x:Name="MinimizeButton"
+                    Click="MinimizeButton_Click"
+                    Content="&#xE108;"
+                    Style="{StaticResource TitleBarButtonStyle}"/>
+            <Button x:Name="MaximizeRestoreButton"
+                    Click="MaximizeRestoreButton_Click"
+                    Content="&#xE922;"
+                    FontSize="12"
+                    Style="{StaticResource TitleBarButtonStyle}"/>
+            <Button x:Name="CloseButton"
+                    Click="CloseButton_Click" 
+                    FontSize="12"
+                    Style="{StaticResource CloseButtonStyle}"/>
         </StackPanel>
         <ScrollViewer x:Name="TerminalHistoryViewer" Grid.Row="1" ScrollChanged="ScrollViewer_ScrollChanged">
             <TextBlock x:Name="TerminalHistoryBlock" FontFamily="Consolas" TextWrapping="Wrap" Foreground="White"/>
         </ScrollViewer>
-        <TextBox x:Name="TerminalEntryField" Grid.Row="2" 
-                 Background="#A8FFFFFF"
-                 FontFamily="Consolas" 
-                 AcceptsReturn="False"
-                 KeyDown="TerminalEntryField_KeyDown"/>
     </Grid>
 </Window>

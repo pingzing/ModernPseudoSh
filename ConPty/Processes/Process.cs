@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using static ConPty.Native.ProcessApi;
+using static GUIConsole.ConPTY.Native.ProcessApi;
 
-namespace ConPty.Processes
+namespace GUIConsole.ConPTY.Processes
 {
     /// <summary>
     /// Represents an instance of a process.
@@ -56,16 +56,12 @@ namespace ConPty.Processes
 
         ~Process()
         {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
             Dispose(false);
         }
-
-        // This code added to correctly implement the disposable pattern.
+        
         public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+        {            
             Dispose(true);
-            // use the following line if the finalizer is overridden above.
             GC.SuppressFinalize(this);
         }
 
