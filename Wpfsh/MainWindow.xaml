@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Wpfsh"
         mc:Ignorable="d"
         
         Title="MainWindow" Height="450" Width="800"
@@ -54,21 +53,30 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel x:Name="TitleBarButtons" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
-            <Button x:Name="MinimizeButton"
-                    Click="MinimizeButton_Click"
-                    Content="&#xE108;"
-                    Style="{StaticResource TitleBarButtonStyle}"/>
-            <Button x:Name="MaximizeRestoreButton"
-                    Click="MaximizeRestoreButton_Click"
-                    Content="&#xE922;"
-                    FontSize="12"
-                    Style="{StaticResource TitleBarButtonStyle}"/>
-            <Button x:Name="CloseButton"
-                    Click="CloseButton_Click" 
-                    FontSize="12"
-                    Style="{StaticResource CloseButtonStyle}"/>
-        </StackPanel>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="TitleBarTitle" Grid.Column="0" VerticalAlignment="Center" Padding="10 0" Foreground="White">
+                Wpfsh
+            </TextBlock>
+            <StackPanel x:Name="TitleBarButtons" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top">
+                <Button x:Name="MinimizeButton"
+                        Click="MinimizeButton_Click"
+                        Content="&#xE108;"
+                        Style="{StaticResource TitleBarButtonStyle}"/>
+                <Button x:Name="MaximizeRestoreButton"
+                        Click="MaximizeRestoreButton_Click"
+                        Content="&#xE922;"
+                        FontSize="12"
+                        Style="{StaticResource TitleBarButtonStyle}"/>
+                <Button x:Name="CloseButton"
+                        Click="CloseButton_Click" 
+                        FontSize="12"
+                        Style="{StaticResource CloseButtonStyle}"/>
+            </StackPanel>
+        </Grid>
         <ScrollViewer x:Name="TerminalHistoryViewer" Grid.Row="1" ScrollChanged="ScrollViewer_ScrollChanged">
             <TextBlock x:Name="TerminalHistoryBlock" FontFamily="Consolas" TextWrapping="Wrap" Foreground="White"/>
         </ScrollViewer>

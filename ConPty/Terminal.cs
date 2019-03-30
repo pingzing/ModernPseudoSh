@@ -1,13 +1,13 @@
-﻿using GUIConsole.ConPTY.Processes;
+﻿using Wpfsh.ConPTY.Processes;
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
-using static GUIConsole.ConPTY.Native.ConsoleApi;
+using static Wpfsh.ConPTY.Native.ConsoleApi;
 
-namespace GUIConsole.ConPTY
+namespace Wpfsh.ConPTY
 {
     /// <summary>
     /// Class for managing communication with the underlying console, and communicating with its pseudoconsole.

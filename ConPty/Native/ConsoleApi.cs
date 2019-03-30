@@ -2,7 +2,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace GUIConsole.ConPTY.Native
+namespace Wpfsh.ConPTY.Native
 {
     /// <summary>
     /// PInvoke signatures for Win32's Console API.

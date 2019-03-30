@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using static GUIConsole.ConPTY.Native.ProcessApi;
+using static Wpfsh.ConPTY.Native.ProcessApi;
 
-namespace GUIConsole.ConPTY.Processes
+namespace Wpfsh.ConPTY.Processes
 {
     /// <summary>
     /// Represents an instance of a process.

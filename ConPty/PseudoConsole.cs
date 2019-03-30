@@ -1,9 +1,9 @@
 ﻿using Microsoft.Win32.SafeHandles;
 using System;
 using System.ComponentModel;
-using static GUIConsole.ConPTY.Native.PseudoConsoleApi;
+using static Wpfsh.ConPTY.Native.PseudoConsoleApi;
 
-namespace GUIConsole.ConPTY
+namespace Wpfsh.ConPTY
 {
     /// <summary>
     /// Utility functions around the new Pseudo Console APIs.

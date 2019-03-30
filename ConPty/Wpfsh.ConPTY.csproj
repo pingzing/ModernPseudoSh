@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Wpfsh.ConPTY</AssemblyName>
+    <RootNamespace>Wpfsh.ConPTY</RootNamespace>
   </PropertyGroup>
 
 </Project>

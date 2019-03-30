@@ -2,9 +2,9 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using static GUIConsole.ConPTY.Native.PseudoConsoleApi;
+using static Wpfsh.ConPTY.Native.PseudoConsoleApi;
 
-namespace GUIConsole.ConPTY
+namespace Wpfsh.ConPTY
 {
     /// <summary>
     /// A pipe used to talk to the pseudoconsole, as described in:

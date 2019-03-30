@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUIConsole.WPF", "Wpfsh\GUIConsole.WPF.csproj", "{FD2109FE-F78A-4E31-8317-11D1B66B69AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wpfsh", "Wpfsh\Wpfsh.csproj", "{FD2109FE-F78A-4E31-8317-11D1B66B69AF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GUIConsole.ConPTY", "ConPty\GUIConsole.ConPTY.csproj", "{96634C74-0C52-4381-9477-97E1D58FE5B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wpfsh.ConPTY", "ConPty\Wpfsh.ConPTY.csproj", "{96634C74-0C52-4381-9477-97E1D58FE5B5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
