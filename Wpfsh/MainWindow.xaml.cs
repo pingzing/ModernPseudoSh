@@ -24,7 +24,7 @@ namespace Wpfsh
         {
             this.SetAcrylicBlur(new Color { A = 90, B = 200, G = 100, R = 50 });
 
-            // Start up the console, and point it to cmd.exe.
+            // Start up the console, and point it to powershell.exe.
             _terminal = new Terminal();
             Task.Run(() => _terminal.Start("powershell.exe"));
             _terminal.OutputReady += Terminal_OutputReady;
@@ -88,12 +88,12 @@ namespace Wpfsh
                 {
                     _autoScroll = false;
                 }
+            }
 
-                // Autoscrolling is enabled, and content caused scrolling:
-                if (_autoScroll && e.ExtentHeightChange != 0)
-                {
-                    TerminalHistoryViewer.ScrollToEnd();
-                }
+            // Autoscrolling is enabled, and content caused scrolling:
+            if (_autoScroll && e.ExtentHeightChange != 0)
+            {
+                TerminalHistoryViewer.ScrollToEnd();
             }
         }
 
