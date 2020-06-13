@@ -40,6 +40,11 @@ namespace Wpfsh.ConPTY.Processes
             }
 
             var startupInfo = new STARTUPINFOEX();
+            const int STARTF_USESTDHANDLES = 0x0000_0100;
+            startupInfo.StartupInfo.dwFlags = STARTF_USESTDHANDLES;
+            startupInfo.StartupInfo.hStdOutput = IntPtr.Zero;
+            startupInfo.StartupInfo.hStdInput = IntPtr.Zero;
+            startupInfo.StartupInfo.hStdError = IntPtr.Zero;
             startupInfo.StartupInfo.cb = Marshal.SizeOf<STARTUPINFOEX>();
             startupInfo.lpAttributeList = Marshal.AllocHGlobal(lpSize);
 
